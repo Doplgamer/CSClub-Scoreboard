@@ -28,10 +28,12 @@
 				}
 			}
 		}
-		#Hey look, this concept is probably gonna be used in PROG06
+		# Hey look, this concept is probably gonna be used in PROG06
 		
 		$csclub = array
 		(
+			# Edit the scores for the array members to get automatically sorted in decending order
+			# Add names people as necessary
 			array("Isaac", "Cybersecurity", 10),
 			array("Andrew Teesdale", "Computer Science", 100),
 			array("Christian Khanke", "Computer Science", 9)
