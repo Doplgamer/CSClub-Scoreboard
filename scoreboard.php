@@ -33,7 +33,7 @@
 		$csclub = array
 		(
 			# Edit the scores for the array members to get automatically sorted in decending order
-			# Add names people as necessary
+			# Add people as necessary
 			array("Isaac", "Cybersecurity", 10),
 			array("Andrew Teesdale", "Computer Science", 100),
 			array("Christian Khanke", "Computer Science", 9)
