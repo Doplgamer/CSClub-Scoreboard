@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CSClub</title>
-	<style>
-		table, th, td {
-			border: 1px solid black;
-			border-collapse: collapse;
-			padding: 5px;
-		}
-	</style>
+	<title>CSClub Scores</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 	<?php
