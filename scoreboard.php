@@ -28,15 +28,13 @@
 				}
 			}
 		}
-		# Hey look, this concept is probably gonna be used in PROG06
 		
 		$csclub = array
 		(
-			# Edit the scores for the array members to get automatically sorted in decending order
-			# Add people as necessary
-			array("Isaac", "Cybersecurity", 10),
-			array("Andrew Teesdale", "Computer Science", 100),
-			array("Christian Khanke", "Computer Science", 9)
+			# Edit the scores for the array members to automatically sort them in decending order
+			# Add people to the scoreboard using this format
+			# array("name", "major", points),
+			# array("other_name", "other_major", points)
 		);
 		
 		bubbleSort($csclub);
