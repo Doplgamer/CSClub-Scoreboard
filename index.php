@@ -49,5 +49,11 @@
 		}
 		echo "</table>";
 	?>
+		
+	<h1>CS Club rocks!</h1>
+	<p>Welcome to our webpage! We are excited to share with you all the amazing things happening in our CS Club. From coding challenges to hackathons, our club is the place to be for anyone interested in computer science. Our members are passionate about technology and eager to learn new skills. Join us and see for yourself why CS Club rocks!</p>
+	
+	<p>Thank you for visiting our webpage. We hope to see you at one of our events soon!</p>
+
 </body>
 </html>
