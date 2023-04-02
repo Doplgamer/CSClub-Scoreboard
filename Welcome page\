@@ -6,12 +6,7 @@
 <body>
 	<h1>CS Club Rocks!</h1>
 	<p>Welcome to our webpage! We are excited to share with you all the amazing things happening in our CS Club. From coding challenges to hackathons, our club is the place to be for anyone interested in computer science. Our members are passionate about technology and eager to learn new skills. Join us and see for yourself why CS Club Rocks!</p>
-	<p>Follow us on social media for updates on upcoming events and activities:</p>
-	<ul>
-		<li>Twitter: @CSClubRocks</li>
-		<li>Instagram: @CS_Club_Rocks</li>
-		<li>Facebook: CS Club Rocks</li>
-	</ul>
+	
 	<p>Thank you for visiting our webpage. We hope to see you at one of our events soon!</p>
 </body>
 </html>
