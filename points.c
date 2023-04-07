@@ -32,6 +32,8 @@ void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment);
 
 void destroy_pts_rec(PTS_REC **p_pts_db);
 
+void delete_pts_rec(PTS_REC **p_pts_db, char *p_name);
+
 int test();
 
 int main(int argc, char *argv[])
@@ -62,6 +64,13 @@ int main(int argc, char *argv[])
          if (param_count == 2)
          {
             insert_pts_rec(&p_db, create_pts_rec(temp_name, 0));
+            save_pts_rec(p_db);
+         }
+         break;
+      case 'd':
+         if (param_count == 2)
+         {
+            delete_pts_rec(&p_db, temp_name);
             save_pts_rec(p_db);
          }
          break;
@@ -203,7 +212,7 @@ void print_pts_rec(PTS_REC *p_pts_db)
       while (p_pts_db)
       {
          printf("<tr><td>%s</td><td>%d</td>\n", p_pts_db->name, p_pts_db->points);
-         printf("<td><a href='%1$s?c=u&n=%2s&i=-4'>--</a></td><td><a href='%1$s?c=u&n=%2$s&i=4'>++</a></td></tr>", CGI_NAME, p_pts_db->name);
+         printf("<td><a href='%1$s?c=u&n=%2$s&i=-4'>--</a></td><td><a href='%1$s?c=u&n=%2$s&i=4'>++</a></td></tr>", CGI_NAME, p_pts_db->name);
          p_pts_db = p_pts_db->p_next;
       }
    else
@@ -271,7 +280,6 @@ void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment)
    return;
 }
 
-/*
 void delete_pts_rec(PTS_REC **p_pts_db, char *p_name)
 {
    PTS_REC *p_prev_pts_rec = NULL,
@@ -279,18 +287,28 @@ void delete_pts_rec(PTS_REC **p_pts_db, char *p_name)
            
    while (p_curr_pts_rec)
    {
-      if (!strccmp(p_curr_pts_rec->name, p_name))
+      if (!strcmp(p_curr_pts_rec->name, p_name))
       {
          if (p_prev_pts_rec)
+         {
+            /* delete a record in the middle or end of the database */
             p_prev_pts_rec->p_next = p_curr_pts_rec->p_next;
+            free(p_curr_pts_rec);
+            p_curr_pts_rec = p_prev_pts_rec;
+         }
          else
-            *p_pts_db = 
+         {
+            /* delete a record at the beginning of the databse */
+            *p_pts_db = p_curr_pts_rec->p_next;
+            free(p_curr_pts_rec);
+            p_curr_pts_rec = NULL;
+         }
       }
       p_prev_pts_rec = p_curr_pts_rec;
       p_curr_pts_rec = p_curr_pts_rec->p_next;
    }
+   return;
 }
-*/
 
 void destroy_pts_rec(PTS_REC **p_pts_db)
 {
