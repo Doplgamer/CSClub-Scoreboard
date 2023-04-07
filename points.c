@@ -5,6 +5,7 @@
 #include <sys/file.h>
 
 #define NAME_LEN 33
+#define CGI_NAME "points.cgi"
 
 struct points_record
 {
@@ -39,13 +40,18 @@ int main(int argc, char *argv[])
    char *p_query, cmd, temp_name[NAME_LEN];
    int param_count = 0,
        increment = 0;
+   
+   print_headers();
+   printf("<!DOCTYPE html><html><meta charset='utf-8'><head>\n");
+   printf("<link rel='stylesheet' href='style.css'>");
+   printf("<style>td{padding:2px;}</style>");
+   printf("</head><body>");
    /* Load the points records database from the file */
    if ((p_query = getenv("QUERY_STRING")) == NULL)
    {
       cmd = 'p';
    }
    load_pts_rec(&p_db);
-   print_headers();
    param_count = sscanf(p_query, "c=%c&n=%[A-Za-z]&i=%d", &cmd, temp_name, &increment);
    switch (cmd)
    {
@@ -71,11 +77,12 @@ int main(int argc, char *argv[])
    print_pts_rec(p_db);
    destroy_pts_rec(&p_db);
       
-   printf("<form action='points'>\n");
+   printf("<form action='%s'>\n", CGI_NAME);
    printf("<input type='hidden' name='c' value='a'>\n");
    printf("<input name='n'>");
    printf("<input type='submit' value='Join'>\n");
    printf("</form>\n");
+   printf("</body></html>");
    return 0;
    
 }
@@ -196,7 +203,7 @@ void print_pts_rec(PTS_REC *p_pts_db)
       while (p_pts_db)
       {
          printf("<tr><td>%s</td><td>%d</td>\n", p_pts_db->name, p_pts_db->points);
-         printf("<td><a href='points?c=u&n=%s&i=4'>points++</a></td></tr>", p_pts_db->name);
+         printf("<td><a href='%1$s?c=u&n=%2s&i=-4'>--</a></td><td><a href='%1$s?c=u&n=%2$s&i=4'>++</a></td></tr>", CGI_NAME, p_pts_db->name);
          p_pts_db = p_pts_db->p_next;
       }
    else
