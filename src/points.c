@@ -148,22 +148,35 @@ PTS_REC *create_pts_rec(char *p_name, int points)
 /* Insert a points record into the ascending sorted points DB */
 void insert_pts_rec(PTS_REC **p_pts_db, PTS_REC *p_pts_rec)
 {
+   PTS_REC *p_prev_pts_rec = NULL,
+           *p_curr_pts_rec = *p_pts_db;
+           
    if (*p_pts_db)
    {
-      while ((*p_pts_db)->p_next != NULL &&
-             p_pts_rec->points < (*p_pts_db)->points)
-         (*p_pts_db) = (*p_pts_db)->p_next;
-         
-      if (p_pts_rec->points >= (*p_pts_db)->points)
+      while (p_curr_pts_rec &&
+             p_pts_rec->points < p_curr_pts_rec->points)
       {
-         p_pts_rec->p_next   = (*p_pts_db)->p_next;
-         (*p_pts_db)->p_next = p_pts_rec;
+         p_prev_pts_rec = p_curr_pts_rec;
+         p_curr_pts_rec = p_curr_pts_rec->p_next;
+      }
+      
+      if (p_curr_pts_rec)
+      {
+         if (p_prev_pts_rec)
+         {
+            /* Insert in the middle of the list */
+            p_pts_rec->p_next = p_curr_pts_rec;
+            p_prev_pts_rec->p_next = p_pts_rec;
+         }
+         else
+         {
+            /* Insert at the head of the list */
+            *p_pts_db = p_pts_rec;
+            p_pts_rec->p_next = p_curr_pts_rec;
+         }
       }
       else
-      {
-         p_pts_rec->p_next  = *p_pts_db;
-         *p_pts_db          = p_pts_rec;
-      }
+         p_prev_pts_rec->p_next = p_pts_rec;
    }
    else
       *p_pts_db = p_pts_rec;
