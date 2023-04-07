@@ -36,53 +36,6 @@ int test();
 int main(int argc, char *argv[])
 {
    PTS_REC *p_db = NULL;
-   char *p_query, cmd, temp_name[NAME_LEN];
-   int param_count = 0,
-       increment = 0;
-   /* Load the points records database from the file */
-   if ((p_query = getenv("QUERY_STRING")) == NULL)
-   {
-      cmd = 'p';
-   }
-   load_pts_rec(&p_db);
-   print_headers();
-   param_count = sscanf(p_query, "c=%c&n=%[A-Za-z]&i=%d", &cmd, temp_name, &increment);
-   switch (cmd)
-   {
-      default:
-      case 'p':
-         break;
-      case 'a':
-         if (param_count == 2)
-         {
-            insert_pts_rec(&p_db, create_pts_rec(temp_name, 0));
-            save_pts_rec(p_db);
-         }
-         break;
-      case 'u':
-         if (param_count == 3)
-         {
-            update_pts_rec(p_db, temp_name, increment);
-            save_pts_rec(p_db);
-         }
-         break;
-
-   }
-   print_pts_rec(p_db);
-   destroy_pts_rec(&p_db);
-      
-   printf("<form action='points'>\n");
-   printf("<input type='hidden' name='c' value='a'>\n");
-   printf("<input name='n'>");
-   printf("<input type='submit' value='Join'>\n");
-   printf("</form>\n");
-   return 0;
-   
-}
-
-int test()
-{
-   PTS_REC *p_db = NULL;
    char menu_choice, temp_name[NAME_LEN];
    int temp_incr;
    
