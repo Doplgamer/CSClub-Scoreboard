@@ -13,14 +13,13 @@ table, th, td
 }
 
 /* Red leader, this is Gold Leader. */
-td:nth-child(1)
+tr:nth-child(1)
 {
-   background-color: gold;
+   background-color: gold !important;
 }
 
 /* I copy Gold Leader */
-td:last-child
+tr:last-child
 {
    background-color: red;
 }
-   

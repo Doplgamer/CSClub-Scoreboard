@@ -45,8 +45,7 @@ int main(int argc, char *argv[])
    
    print_headers();
    printf("<!DOCTYPE html><html><meta charset='utf-8'><head>\n");
-   printf("<link rel='stylesheet' href='style.css'>");
-   printf("<style>td{padding:2px;}</style>");
+   printf("<link rel='stylesheet' href='/style.css'>");
    printf("</head><body>");
    /* Load the points records database from the file */
    if ((p_query = getenv("QUERY_STRING")) == NULL)
