@@ -1,12 +1,25 @@
 body
 {
-  margin: 0 auto;
-  max-width: 800px;
-}		
+   margin: 0 auto;
+   max-width: 800px;
+}
 
 table, th, td
 {
-  border: 1px solid black;
-  border-collapse: collapse;
-  padding: 5px;
+   border: 1px solid black;
+   border-collapse: collapse;
+   padding: 5px;
+   width: 100%;
+}
+
+/* Red leader, this is Gold Leader. */
+tr:nth-child(1)
+{
+   background-color: gold !important;
+}
+
+/* I copy Gold Leader */
+tr:last-child
+{
+   background-color: red;
 }
