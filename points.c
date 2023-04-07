@@ -6,6 +6,8 @@
 
 #define NAME_LEN 33
 #define CGI_NAME "points.cgi"
+#define CSS_PATH "style.css"
+#define MAX_NEG_PTS -100
 
 struct points_record
 {
@@ -32,6 +34,8 @@ void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment);
 
 void destroy_pts_rec(PTS_REC **p_pts_db);
 
+void cleanup_negatives(PTS_REC **p_pts_db);
+
 void delete_pts_rec(PTS_REC **p_pts_db, char *p_name);
 
 int test();
@@ -45,7 +49,8 @@ int main(int argc, char *argv[])
    
    print_headers();
    printf("<!DOCTYPE html><html><meta charset='utf-8'><head>\n");
-   printf("<link rel='stylesheet' href='/style.css'>");
+   printf("<meta name='viewport' content='width=device-width, initial-scale=1'/>");
+   printf("<link rel='stylesheet' href='%s'>", CSS_PATH);
    printf("</head><body>");
    /* Load the points records database from the file */
    if ((p_query = getenv("QUERY_STRING")) == NULL)
@@ -77,6 +82,7 @@ int main(int argc, char *argv[])
          if (param_count == 3)
          {
             update_pts_rec(p_db, temp_name, increment);
+            cleanup_negatives(&p_db);
             save_pts_rec(p_db);
          }
          break;
@@ -273,8 +279,40 @@ void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment)
    while (p_pts_db)
    {
       if (!strcmp(p_pts_db->name, p_name))
+      {
          p_pts_db->points += increment;
+      }
       p_pts_db = p_pts_db->p_next;
+   }
+   return;
+}
+
+void cleanup_negatives(PTS_REC **p_pts_db)
+{
+   PTS_REC *p_prev_pts_rec = NULL,
+           *p_curr_pts_rec = *p_pts_db;
+           
+   while (p_curr_pts_rec)
+   {
+      if (p_curr_pts_rec->points < MAX_NEG_PTS)
+      {
+         if (p_prev_pts_rec)
+         {
+            /* delete a record in the middle or end of the database */
+            p_prev_pts_rec->p_next = p_curr_pts_rec->p_next;
+            free(p_curr_pts_rec);
+            p_curr_pts_rec = p_prev_pts_rec;
+         }
+         else
+         {
+            /* delete a record at the beginning of the databse */
+            *p_pts_db = p_curr_pts_rec->p_next;
+            free(p_curr_pts_rec);
+            p_curr_pts_rec = NULL;
+         }
+      }
+      p_prev_pts_rec = p_curr_pts_rec;
+      p_curr_pts_rec = p_curr_pts_rec->p_next;
    }
    return;
 }
@@ -306,7 +344,6 @@ void delete_pts_rec(PTS_REC **p_pts_db, char *p_name)
       p_prev_pts_rec = p_curr_pts_rec;
       p_curr_pts_rec = p_curr_pts_rec->p_next;
    }
-   return;
 }
 
 void destroy_pts_rec(PTS_REC **p_pts_db)
