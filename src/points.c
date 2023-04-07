@@ -42,14 +42,14 @@ int main(int argc, char *argv[])
    /* Load the points records database from the file */
    if ((p_query = getenv("QUERY_STRING")) == NULL)
    {
-      printf("provide a query\n");
+      cmd = 'p';
    }
    load_pts_rec(&p_db);
    print_headers();
    param_count = sscanf(p_query, "c=%c&n=%[A-Za-z]&i=%d", &cmd, temp_name, &increment);
-   printf("Param Count: %d\n", param_count);
    switch (cmd)
    {
+      default:
       case 'p':
          print_pts_rec(p_db);
          break;
@@ -65,11 +65,10 @@ int main(int argc, char *argv[])
          {
             update_pts_rec(p_db, temp_name, increment);
             save_pts_rec(p_db);
+            print_pts_rec(p_db);
          }
          break;
-      default:
-         printf("Provide a parameter\n");
-         break;
+
    }
    destroy_pts_rec(&p_db);
    return 0;
@@ -125,7 +124,7 @@ int test()
 /* Print necessary HTTP headers for CGI */
 void print_headers()
 {
-   printf("Content-Type: text/plain;charset=utf-8\r\n\r\n");
+   printf("Content-Type: text/html;charset=utf-8\r\n\r\n");
    return;
 }
 
@@ -174,14 +173,18 @@ void insert_pts_rec(PTS_REC **p_pts_db, PTS_REC *p_pts_rec)
 /* Print the points record database with a special message if empty */
 void print_pts_rec(PTS_REC *p_pts_db)
 {
+   printf("<table>");
    if (p_pts_db)
       while (p_pts_db)
       {
-         printf("%s - %d\n", p_pts_db->name, p_pts_db->points);
+         printf("<tr><td>%s</td><td>%d</td>\n", p_pts_db->name, p_pts_db->points);
+         printf("<td><a href='points?c=u&n=%s&i=4'>points++</a></td></tr>", p_pts_db->name);
          p_pts_db = p_pts_db->p_next;
       }
    else
       printf("Currently the points database is empty\n");
+   printf("</table>");
+   return;
 }
 
 /* Save a points record database to a file */
