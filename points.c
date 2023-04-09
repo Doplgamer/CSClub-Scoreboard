@@ -1,45 +1,62 @@
+/******************************************************************************/
+/* Program Name: points.c - CGI program that manages a database of points     */
+/******************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <sys/file.h>
 
+/******************************************************************************/
+/*                            Symbolic Constants                              */
+/******************************************************************************/
+
 #define NAME_LEN 33
 #define CGI_NAME "points.cgi"
 #define CSS_PATH "style.css"
 #define MAX_NEG_PTS -100
 
+
+/******************************************************************************/
+/*                            Program Structures                              */
+/******************************************************************************/
+/* Points record structure                                                    */
 struct points_record
 {
-   int points; /* Total points that the owner has */
-   char name[NAME_LEN]; /* Name of the points owner        */
-   struct points_record *p_next;
+   int                  points;         /* Total points that the owner has */
+   char                 name[NAME_LEN]; /* Name of the points owner        */
+   struct points_record *p_next;	       /* Points to the next record       */
 };
-
 typedef struct points_record PTS_REC;
 
+/******************************************************************************/
+/*                           Function Prototypes                              */
+/******************************************************************************/
 void print_headers();
-
+   /* Print CGI headers                                                       */
 PTS_REC *create_pts_rec(char *p_name, int points);
-
+   /* Dynamically allocate a new points record                                */
 void insert_pts_rec(PTS_REC **p_pts_db, PTS_REC *p_pts_rec);
-
+   /* Insert a points record into the sorted points record database           */
 void print_pts_rec(PTS_REC *p_pts_db);
-
+   /* Generate HTML table to display the points records database              */
 void save_pts_rec(PTS_REC *p_pts_db);
-
+   /* Save the sorted points record database to a file                        */
 void load_pts_rec(PTS_REC **p_pts_db);
-
+   /* Load the points record database from a file                             */
 void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment);
-
+   /* Increment the value of a specific points record                         */
 void destroy_pts_rec(PTS_REC **p_pts_db);
-
+   /* Delete the points record database                                       */
 void cleanup_negatives(PTS_REC **p_pts_db);
-
+   /* Remove all negative points records from the database                    */
 void delete_pts_rec(PTS_REC **p_pts_db, char *p_name);
+   /* Delete a specific points record from the database                       */
 
-int test();
-
+/******************************************************************************/
+/*                                Main Function                               */
+/******************************************************************************/
 int main(int argc, char *argv[])
 {
    PTS_REC *p_db = NULL;
@@ -101,60 +118,18 @@ int main(int argc, char *argv[])
    
 }
 
-int test()
-{
-   PTS_REC *p_db = NULL;
-   char menu_choice, temp_name[NAME_LEN];
-   int temp_incr;
-   
-   print_headers();
-   
-   do
-   {
-      scanf(" %c", &menu_choice);
-      switch (menu_choice)
-      {
-         case 'w':
-            printf("Saving points records to file\n");
-            save_pts_rec(p_db);
-            break;
-         case 'l':
-            printf("Loading points records from file\n");
-            destroy_pts_rec(&p_db);
-            load_pts_rec(&p_db);
-            break;
-         case 'a':
-            printf("Adding new record to DB\n");
-            scanf(" %s", temp_name);
-            insert_pts_rec(&p_db, create_pts_rec(temp_name, 0));
-            break;
-         case 'u':
-            scanf(" %s", temp_name);
-            scanf(" %d", &temp_incr);
-            update_pts_rec(p_db, temp_name, temp_incr);
-            break;
-         case 'p':
-            print_pts_rec(p_db);
-            break;
-         case 'q':
-            printf("Quitting...\n");
-            break;
-         default:
-            break;
-      }
-   }
-   while (tolower(menu_choice) != 'q');
-   return 0;
-}
-
-/* Print necessary HTTP headers for CGI */
+/******************************************************************************/
+/*                        Print HTTP headers                                  */
+/******************************************************************************/
 void print_headers()
 {
    printf("Content-Type: text/html;charset=utf-8\r\n\r\n");
    return;
 }
 
-/* Create a points record */
+/******************************************************************************/
+/*                Dynamically allocate a new points record                    */
+/******************************************************************************/
 PTS_REC *create_pts_rec(char *p_name, int points)
 {
    PTS_REC *p_new_pts_rec; /* Newly allocated points record */
@@ -171,7 +146,10 @@ PTS_REC *create_pts_rec(char *p_name, int points)
    return p_new_pts_rec;
 }
 
-/* Insert a points record into the ascending sorted points DB */
+
+/******************************************************************************/
+/*        Insert a points record into the ascending sorted points DB          */ 
+/******************************************************************************/
 void insert_pts_rec(PTS_REC **p_pts_db, PTS_REC *p_pts_rec)
 {
    PTS_REC *p_prev_pts_rec = NULL,
@@ -209,7 +187,9 @@ void insert_pts_rec(PTS_REC **p_pts_db, PTS_REC *p_pts_rec)
    return;
 }
 
-/* Print the points record database with a special message if empty */
+/******************************************************************************/
+/*             Display the points record database as an HTML table            */
+/******************************************************************************/
 void print_pts_rec(PTS_REC *p_pts_db)
 {
    printf("<table>");
@@ -226,7 +206,9 @@ void print_pts_rec(PTS_REC *p_pts_db)
    return;
 }
 
-/* Save a points record database to a file */
+/******************************************************************************/
+/*                  Save the points record database to a file                 */
+/******************************************************************************/
 void save_pts_rec(PTS_REC *p_pts_db)
 {
    FILE *p_file;
@@ -245,7 +227,9 @@ void save_pts_rec(PTS_REC *p_pts_db)
    return;
 }
 
-/* Load a points record database from a file */
+/******************************************************************************/
+/*               Load the points record database from a file                  */
+/******************************************************************************/
 void load_pts_rec(PTS_REC **p_pts_db)
 {
    FILE *p_file;
@@ -273,7 +257,9 @@ void load_pts_rec(PTS_REC **p_pts_db)
    return;
 }
 
-/*  */
+/******************************************************************************/
+/*                 Find and increment records with matching names             */
+/******************************************************************************/
 void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment)
 {
    while (p_pts_db)
@@ -287,6 +273,9 @@ void update_pts_rec(PTS_REC *p_pts_db, char *p_name, int increment)
    return;
 }
 
+/******************************************************************************/
+/*             Remove records with negative values past NEG_MAX               */
+/******************************************************************************/
 void cleanup_negatives(PTS_REC **p_pts_db)
 {
    PTS_REC *p_prev_pts_rec = NULL,
@@ -317,6 +306,9 @@ void cleanup_negatives(PTS_REC **p_pts_db)
    return;
 }
 
+/******************************************************************************/
+/*                   Delete a points record with a specific name              */
+/******************************************************************************/
 void delete_pts_rec(PTS_REC **p_pts_db, char *p_name)
 {
    PTS_REC *p_prev_pts_rec = NULL,
@@ -346,6 +338,9 @@ void delete_pts_rec(PTS_REC **p_pts_db, char *p_name)
    }
 }
 
+/******************************************************************************/
+/*                  Delete a points record database                           */
+/******************************************************************************/
 void destroy_pts_rec(PTS_REC **p_pts_db)
 {
    PTS_REC *p_temp_pts_rec;
